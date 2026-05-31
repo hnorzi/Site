@@ -1,33 +1,144 @@
-<!--
-    So, a writing challenge, but honestly it's more like a mirror. You look at it, you fill it in, and what comes back is basically how you see the world right now.
-Here's the deal:
-Three poems. Same structure for everyone. But the blanks? Those are yours. You pick the words. You pick the mood. You pick what it means. Someone else will look at the exact same empty spaces and write something completely different. And neither of you is wrong. That's the whole point. That's it. No rules about rhyme, length, perfect grammar. Just... what would you put in that blank?  Could be soft. Could be sharp. Could be something you haven't said out loud to anyone.
-Anyway. It's open. Your move. ✍️ 
--->
-
-<!--
-     ATTENTION ‼️
-     
-   If the first submission is acting up (failing), just re-run the code and try again. That fixes it completely ✅.
-
-   For desktop users: Use arrow keys or WASD to swipe between poems.
-
-   Whenever you change your mind you can delete your submission and submit again anytime.
--->
-
-
-
 <!DOCTYPE html>
-<!-- The Originals by Guga -->
-<!-- 🧌 -->
-
-<html>
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>[REDACTED] — A Writing Challenge</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Workout Checklist</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 520px;
+      background: #111827;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    input {
+      width: 70%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+
+    .add {
+      background: #22c55e;
+      color: white;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-top: 20px;
+    }
+
+    li {
+      background: #1f2937;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .done {
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    .actions button {
+      font-size: 12px;
+      margin-left: 5px;
+    }
+
+    .delete { background: #ef4444; color: white; }
+    .edit { background: #3b82f6; color: white; }
+    .toggle { background: #f59e0b; color: white; }
+
+    .time {
+      font-size: 12px;
+      opacity: 0.6;
+    }
+  </style>
 </head>
-<body style="margin: 0;padding: 0;width: 100%;height: 100%;overflow: hidden;background-color: #0a0a0a;">
-    <iframe src="https://redactions.vercel.app/" style="width: 100vw;height: 100vh;border: none;display: block;"></iframe>
-</body>
-</html>
+
+<body>
+
+<div class="container">
+  <h1>🏋️ Workout Checklist</h1>
+
+  <input id="taskInput" placeholder="تمرین جدید..." />
+  <button class="add" onclick="addTask()">اضافه</button>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+  let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+  function save() {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }
+
+  function timeAgo(date) {
+    const diff = Date.now() - date;
+    const mins = Math.floor(diff / 60000);
+    const hrs = Math.floor(mins / 60);
+
+    if (mins < 1) return "الان";
+    if (mins < 60) return mins + " دقیقه پیش";
+    if (hrs < 24) return hrs + " ساعت پیش";
+    return Math.floor(hrs / 24) + " روز پیش";
+  }
+
+  function render() {
+    const list = document.getElementById("list");
+    list.innerHTML = "";
+
+    tasks.forEach((t, i) => {
+      list.innerHTML += `
+        <li class="${t.done ? 'done' : ''}">
+          
+          <div class="top">
+            <span onclick="toggle(${i})">${t.text}</span>
+
+            <div class="actions">
+              <button class="toggle" onclick="toggle(${i})">✔</button>
+              <button class="edit" onclick="editTask(${i})">ویرایش</button>
+              <button class="delete" onclick="deleteTask(${i})">حذف</button>
+            </div>
+          </div>
+
+          <div class="time">
+            ساخته شده: ${timeAgo(t.createdAt)}
+          </div>
+
+        </
